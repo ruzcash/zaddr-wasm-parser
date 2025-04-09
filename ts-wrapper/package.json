@@ -1,0 +1,24 @@
+{
+  "name": "zaddr-wasm-parser",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Zcash address parser via WASM",
+  "main": "./dist/index.js",
+  "types": "./dist/index.js",
+  "scripts": {
+    "build": "tsc"
+  },
+  "keywords": [
+    "zcash",
+    "wasm",
+    "unified address",
+    "parser"
+  ],
+  "author": "artkor",
+  "license": "MIT",
+  "devDependencies": {
+    "copyfiles": "^2.4.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.3"
+  }
+}

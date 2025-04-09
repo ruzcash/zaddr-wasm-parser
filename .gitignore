@@ -1,0 +1,16 @@
+# macOS
+.DS_Store
+__MACOSX/
+# Rust
+/target/
+/pkg/
+# TypeScript
+ts-wrapper/dist/
+# Test integration (local-only)
+test-integration/
+/pkg/
+/target/
+ts-wrapper/dist/
+# Node
+node_modules/
+ts-wrapper/node_modules/

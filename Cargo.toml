@@ -1,0 +1,31 @@
+[package]
+name = "zaddr_wasm_parser"
+version = "0.1.0"
+edition = "2021"
+description = "WASM wrapper around the official Rust zcash_address library for parsing and validating Zcash Unified Addresses."
+repository = "https://github.com/ruzcash/zaddr_wasm_parser"
+license = "MIT OR Apache-2.0"
+categories = ["cryptography::cryptocurrencies", "encoding"]
+keywords = ["zcash", "address", "sapling", "unified"]
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+wasm-bindgen = "0.2"
+serde-wasm-bindgen = "0.6"
+zcash_address = "0.7.0"
+zcash_protocol = "0.5.1"
+serde = { version = "1.0", features = ["derive"] }
+
+[dev-dependencies]
+web-sys = { version = "0.3", features = ["console"] }
+wasm-bindgen-test = "0.3"
+
+[profile.release]
+panic = "abort"
+opt-level = 2
+
+[[test]]
+name = "lib_tests"
+path = "tests/lib_tests.rs"
