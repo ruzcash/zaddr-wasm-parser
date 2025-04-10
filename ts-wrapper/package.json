@@ -4,9 +4,22 @@
   "type": "module",
   "description": "Zcash address parser via WASM",
   "main": "./dist/index.js",
-  "types": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "files": [
+    "dist",
+    "pkg"
+  ],
   "scripts": {
-    "build": "tsc"
+    "build": "tsc && npm run copy-pkg",
+    "copy-pkg": "copyfiles -u 1 ../pkg/**/* .",
+    "demo": "npm run build && node dist/demo.js",
+    "demo-dev": "USE_SRC=1 node --no-warnings --loader ts-node/esm demo.ts"
   },
   "keywords": [
     "zcash",
@@ -14,7 +27,7 @@
     "unified address",
     "parser"
   ],
-  "author": "artkor",
+  "author": "ruzcash",
   "license": "MIT",
   "devDependencies": {
     "copyfiles": "^2.4.1",

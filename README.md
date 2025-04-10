@@ -12,13 +12,65 @@ WASM-integrated tests are located in the `tests/` directory.
 
 ## Installation and Build
 
-To compile the WASM module for use in the browser:
+To set up the project from a clean system:
+
+### 1. Clone the repository:
 
 ```bash
-wasm-pack build --target web
+cd ~/zcash-wasm
+git clone https://github.com/ruzcash/zaddr-wasm-parser.git
+cd zaddr-wasm-parser
 ```
 
-The output will be placed in the `pkg/` directory. You can import this module directly in TypeScript using the `ts-wrapper/` bindings.
+### 2. Install dependencies:
+
+Install the Rust WebAssembly toolchain:
+
+```bash
+brew install wasm-pack
+```
+
+(Optional) Install `wasm-bindgen-cli` to run browser tests:
+
+```bash
+cargo install wasm-bindgen-cli
+```
+
+(Optional) Install a simple local server for browser preview:
+
+```bash
+npm install -g live-server
+```
+
+### 3. Build the WASM module:
+
+#### For Node.js (TypeScript tests and demo)
+```bash
+wasm-pack build --target bundler --out-dir pkg
+```
+
+#### For browser (HTML demo and tests)
+```bash
+wasm-pack build --target web --out-dir pkg
+```
+
+> ⚠️ These two targets are **not compatible** with each other. If you switch between browser and Node.js testing, recompile the WASM module accordingly.
+
+---
+
+## TypeScript Wrapper
+
+### Compile and run demo
+
+```bash
+cd ts-wrapper
+npm install
+npm run build
+npm run demo          # runs dist/demo.js
+npm run demo-dev      # runs src/demo.ts via ts-node
+```
+
+> `demo.ts` dynamically switches between `src/` and `dist/` depending on the `USE_SRC` environment variable.
 
 ---
 
@@ -70,36 +122,49 @@ If a Unified Address is provided, this returns a list of its internal receivers 
 
 ## Testing
 
-To run tests using Chrome:
-
-### 1. Install wasm-bindgen test tools:
-
-```bash
-cargo install wasm-bindgen-cli
-```
-
-### 2. Run tests in browser:
+To run integration tests using Chrome:
 
 ```bash
 wasm-pack test --chrome
 ```
 
-This will launch Chrome and run the test suite defined in `tests/`.
+All WASM-enabled Rust tests are located in the `tests/` directory.  
+They cover transparent, shielded, Unified, and invalid Zcash address formats.
+
+> If you see errors related to `WebAssembly.instantiateStreaming`, make sure the module was built with `--target web`:
+
+```bash
+wasm-pack build --target web --out-dir pkg
+```
+
+Expected output:
+
+```
+test result: ok. 14 passed; 0 failed
+```
 
 ---
 
 ## Browser Demo
 
-A functional test page is included in the repository:  
+A functional browser-based demo page is included in the repository:  
 `zcash_address_parser_test.html`
 
-To run it:
+To view the demo locally:
 
 ```bash
 npx live-server
 ```
 
-The page demonstrates address parsing and classification in the browser using the compiled WASM module.
+Then open the following URL:
+
+```
+http://127.0.0.1:8080/zcash_address_parser_test.html
+```
+
+This HTML page allows interactive testing of Zcash address parsing and classification using the compiled WASM module.
+
+> Ensure the WASM module was compiled using `--target web` before using the browser demo.
 
 ---
 
@@ -113,9 +178,9 @@ zaddr-wasm-parser/
 │   ├── src/
 │   │   ├── index.ts
 │   │   └── types.ts
-│   ├── package.json
-│   ├── tsconfig.json
-│   └── demo.ts
+│   ├── dist/
+│   ├── demo.ts
+│   └── package.json
 ├── test-integration/          # Optional JS-only local test
 │   └── test.js
 ├── zcash_address_parser_test.html  # Browser test page

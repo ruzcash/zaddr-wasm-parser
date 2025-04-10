@@ -1,14 +1,21 @@
 import path from "path";
-import { fileURLToPath } from "url";
+import { fileURLToPath, pathToFileURL } from "url";
 
-let wasm: any;
+let wasm: {
+  is_valid_zcash_address: (addr: string) => boolean;
+  get_zcash_address_type: (addr: string) => string;
+  parse_zcash_address_js: (addr: string) => boolean;
+  get_raw_zcash_address_js: (addr: string) => string;
+  get_ua_receivers: (addr: string) => string[];
+};
 
 export async function initWasm(): Promise<void> {
   const __filename = fileURLToPath(import.meta.url);
   const __dirname = path.dirname(__filename);
   const wasmModulePath = path.resolve(__dirname, "../../pkg/zaddr_wasm_parser.js");
 
-  wasm = await import(wasmModulePath);
+  const wasmModule = await import(pathToFileURL(wasmModulePath).href);
+  wasm = wasmModule;
 }
 
 export function isZcashAddressValid(address: string): boolean {

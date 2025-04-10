@@ -6,10 +6,9 @@ __MACOSX/
 /pkg/
 # TypeScript
 ts-wrapper/dist/
-# Test integration (local-only)
-/pkg/
-/target/
-ts-wrapper/dist/
+ts-wrapper/pkg/
+# test-integration
+test-integration/node_modules/
 # Node
 node_modules/
 ts-wrapper/node_modules/

@@ -1,12 +1,21 @@
 import path from "path";
 import { fileURLToPath, pathToFileURL } from "url";
 
-// вычисляем абсолютный путь до index.js независимо от места запуска
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+async function main() {
+  const __filename = fileURLToPath(import.meta.url);
+  const __dirname = path.dirname(__filename);
 
-const distModulePath = path.resolve(__dirname, "./dist/index.js");
-const distModule = await import(pathToFileURL(distModulePath).href);
+  // Выбираем между dist и src
+  const isDev = !!process.env.USE_SRC;
+  const modulePath = path.resolve(__dirname, isDev ? "src/index.ts" : "src/index.js");
+  const sdkModule = await import(pathToFileURL(modulePath).href);
 
-await distModule.initWasm();
-console.log("Address type:", distModule.getZcashAddressType("t1XUKmDLFcRDxvf9A7tawmgePDN8NK6os35"));
+  await sdkModule.initWasm();
+
+  const testAddr = "t1XUKmDLFcRDxvf9A7tawmgePDN8NK6os35";
+  const type = sdkModule.getZcashAddressType(testAddr);
+
+  console.log("Address type:", type);
+}
+
+main();
