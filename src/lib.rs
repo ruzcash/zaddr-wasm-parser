@@ -127,6 +127,6 @@ pub fn get_ua_receivers(addr_string: &str) -> JsValue {
 
             to_value(&result).unwrap_or(JsValue::NULL)
         },
-        None => JsValue::NULL,  // Если адрес невалидный
+        None => JsValue::NULL,
     }
 }

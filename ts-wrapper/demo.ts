@@ -5,7 +5,6 @@ async function main() {
   const __filename = fileURLToPath(import.meta.url);
   const __dirname = path.dirname(__filename);
 
-  // Выбираем между dist и src
   const isDev = !!process.env.USE_SRC;
   const modulePath = path.resolve(__dirname, isDev ? "src/index.ts" : "src/index.js");
   const sdkModule = await import(pathToFileURL(modulePath).href);
