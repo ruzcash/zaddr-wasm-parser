@@ -120,6 +120,28 @@ If a Unified Address is provided, this returns a list of its internal receivers 
 
 ---
 
+## Fuzz Testing (Vitest)
+
+A simple fuzz test is included to ensure `getZcashAddressType()` handles unexpected input gracefully.
+
+### Run with:
+
+```bash
+npm run fuzz
+```
+
+This uses [`vitest`](https://vitest.dev/) to feed edge-case strings into the parser.  
+All tests are located in `ts-wrapper/fuzz.test.ts`.
+
+You can extend the test cases for additional coverage.
+
+> To run manually:
+```bash
+npx tsx ts-wrapper/fuzz.test.ts
+```
+
+---
+
 ## Testing
 
 To run integration tests using Chrome:
@@ -168,6 +190,18 @@ This HTML page allows interactive testing of Zcash address parsing and classific
 
 ---
 
+## Why Use This?
+
+`zaddr-wasm-parser` is designed for use cases where full-node access is not practical — especially:
+
+- Browser-based applications
+- Exchanges migrating from transparent to Unified Addresses
+- Zcash-compatible tooling that needs quick validation
+
+This library never touches private keys or network state. It's ideal for front-end environments, static analysis, or integration in Web SDKs.
+
+---
+
 ## Project Structure
 
 ```
@@ -180,7 +214,9 @@ zaddr-wasm-parser/
 │   │   └── types.ts
 │   ├── dist/
 │   ├── demo.ts
-│   └── package.json
+│   ├── fuzz.test.ts
+│   ├── package.json
+│   └── __mocks__/
 ├── test-integration/          # Optional JS-only local test
 │   └── test.js
 ├── zcash_address_parser_test.html  # Browser test page
