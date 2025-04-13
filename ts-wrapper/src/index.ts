@@ -10,12 +10,13 @@ let wasm: {
 };
 
 export async function initWasm(): Promise<void> {
+  if (wasm) return;
+
   const __filename = fileURLToPath(import.meta.url);
   const __dirname = path.dirname(__filename);
   const wasmModulePath = path.resolve(__dirname, "../../pkg/zaddr_wasm_parser.js");
 
-  const wasmModule = await import(pathToFileURL(wasmModulePath).href);
-  wasm = wasmModule;
+  wasm = await import(pathToFileURL(wasmModulePath).href);
 }
 
 export function isZcashAddressValid(address: string): boolean {
