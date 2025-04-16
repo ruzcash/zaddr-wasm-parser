@@ -259,3 +259,4 @@ Dual-licensed under MIT or Apache-2.0.
 ## Maintainer
 
 [@ruzcash](https://github.com/ruzcash)
+[@elemental-zcash](https://github.com/elemental-zcash)
