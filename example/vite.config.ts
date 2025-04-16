@@ -18,4 +18,5 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  base: process.env.GH_PAGES_BUILD === 'true' ? "/zaddr-wasm-parser/" : undefined,
 })

@@ -74,6 +74,27 @@ npm run demo-dev      # runs src/demo.ts via ts-node
 
 ---
 
+## `npm` Usage
+
+This package is published to `npm` under a forked repository: https://github.com/elemental-zcash/zaddr-wasm-parser with the package name `@elemental-zcash/zaddr_wasm_parser`.
+
+```tsx
+import {
+  is_valid_zcash_address,
+  get_raw_zcash_address,
+  parse_zcash_address,
+  get_zcash_address_type,
+  get_ua_receivers
+} from "@elemental-zcash/zaddr_wasm_parser";
+
+const addr = "u1...";
+
+console.log("Valid:", is_valid_zcash_address(addr));
+console.log("Type:", get_zcash_address_type(addr));
+console.log("Raw:", get_raw_zcash_address(addr));
+console.log("Receivers:", get_ua_receivers(addr));
+```
+
 ## Usage Example
 
 ```ts

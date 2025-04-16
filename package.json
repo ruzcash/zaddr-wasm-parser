@@ -1,5 +1,6 @@
 {
+  "private": true,
   "scripts": {
-    "build": "wasm-pack build --scope elemental-zcash"
+    "build": "wasm-pack build"
   }
 }
