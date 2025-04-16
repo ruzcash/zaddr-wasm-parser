@@ -25,7 +25,7 @@ fn validate_address(addr_string: &str) -> Option<String> {
 
 // Returns a normalized address string
 #[wasm_bindgen]
-pub fn get_raw_zcash_address_js(addr_string: &str) -> String {
+pub fn get_raw_zcash_address(addr_string: &str) -> String {
     if !is_valid_zcash_address(addr_string) {
         return "Error: Invalid address format".to_string();
     }
@@ -37,7 +37,7 @@ pub fn get_raw_zcash_address_js(addr_string: &str) -> String {
 
 // Checks if the address is valid
 #[wasm_bindgen]
-pub fn parse_zcash_address_js(addr_string: &str) -> bool {
+pub fn parse_zcash_address(addr_string: &str) -> bool {
     validate_address(addr_string).is_some() 
 }
 
@@ -127,6 +127,6 @@ pub fn get_ua_receivers(addr_string: &str) -> JsValue {
 
             to_value(&result).unwrap_or(JsValue::NULL)
         },
-        None => JsValue::NULL,  // Если адрес невалидный
+        None => JsValue::NULL,
     }
 }

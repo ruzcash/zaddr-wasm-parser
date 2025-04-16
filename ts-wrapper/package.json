@@ -15,12 +15,14 @@
     "dist",
     "pkg"
   ],
-  "scripts": {
-    "build": "tsc && npm run copy-pkg",
-    "copy-pkg": "copyfiles -u 1 ../pkg/**/* .",
-    "demo": "npm run build && node dist/demo.js",
-    "demo-dev": "USE_SRC=1 node --no-warnings --loader ts-node/esm demo.ts"
-  },
+"scripts": {
+  "build": "tsc && npm run copy-pkg",
+  "copy-pkg": "copyfiles -u 1 ../pkg/**/* .",
+  "demo": "npm run build && node dist/demo.js",
+  "demo-dev": "USE_SRC=1 node --no-warnings --loader ts-node/esm demo.ts",
+  "fuzz": "tsx src/fuzz.test.ts",
+  "test": "vitest"
+}
   "keywords": [
     "zcash",
     "wasm",

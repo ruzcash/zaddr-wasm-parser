@@ -74,6 +74,27 @@ npm run demo-dev      # runs src/demo.ts via ts-node
 
 ---
 
+## `npm` Usage
+
+This package is published to `npm` under a forked repository: https://github.com/elemental-zcash/zaddr-wasm-parser with the package name `@elemental-zcash/zaddr_wasm_parser`.
+
+```tsx
+import {
+  is_valid_zcash_address,
+  get_raw_zcash_address,
+  parse_zcash_address,
+  get_zcash_address_type,
+  get_ua_receivers
+} from "@elemental-zcash/zaddr_wasm_parser";
+
+const addr = "u1...";
+
+console.log("Valid:", is_valid_zcash_address(addr));
+console.log("Type:", get_zcash_address_type(addr));
+console.log("Raw:", get_raw_zcash_address(addr));
+console.log("Receivers:", get_ua_receivers(addr));
+```
+
 ## Usage Example
 
 ```ts
@@ -117,6 +138,28 @@ Returns a normalized version of the address string, or `null` if the input is in
 
 ### `getUnifiedAddressReceivers(address: string): string[]`
 If a Unified Address is provided, this returns a list of its internal receivers as address strings.
+
+---
+
+## Fuzz Testing (Vitest)
+
+A simple fuzz test is included to ensure `getZcashAddressType()` handles unexpected input gracefully.
+
+### Run with:
+
+```bash
+npm run fuzz
+```
+
+This uses [`vitest`](https://vitest.dev/) to feed edge-case strings into the parser.  
+All tests are located in `ts-wrapper/fuzz.test.ts`.
+
+You can extend the test cases for additional coverage.
+
+> To run manually:
+```bash
+npx tsx ts-wrapper/fuzz.test.ts
+```
 
 ---
 
@@ -168,6 +211,18 @@ This HTML page allows interactive testing of Zcash address parsing and classific
 
 ---
 
+## Why Use This?
+
+`zaddr-wasm-parser` is designed for use cases where full-node access is not practical — especially:
+
+- Browser-based applications
+- Exchanges migrating from transparent to Unified Addresses
+- Zcash-compatible tooling that needs quick validation
+
+This library never touches private keys or network state. It's ideal for front-end environments, static analysis, or integration in Web SDKs.
+
+---
+
 ## Project Structure
 
 ```
@@ -180,7 +235,9 @@ zaddr-wasm-parser/
 │   │   └── types.ts
 │   ├── dist/
 │   ├── demo.ts
-│   └── package.json
+│   ├── fuzz.test.ts
+│   ├── package.json
+│   └── __mocks__/
 ├── test-integration/          # Optional JS-only local test
 │   └── test.js
 ├── zcash_address_parser_test.html  # Browser test page
