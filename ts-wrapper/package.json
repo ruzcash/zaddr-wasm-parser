@@ -22,7 +22,7 @@
   "demo-dev": "USE_SRC=1 node --no-warnings --loader ts-node/esm demo.ts",
   "fuzz": "tsx src/fuzz.test.ts",
   "test": "vitest"
-}
+},
   "keywords": [
     "zcash",
     "wasm",
