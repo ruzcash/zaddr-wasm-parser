@@ -1,1 +1,1 @@
-export type ZcashAddressType = "t" | "z" | "u" | "tex";
+export type ZcashAddressType = "p2pkh" | "p2sh" | "sapling" | "unified" | "tex";
