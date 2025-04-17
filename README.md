@@ -66,8 +66,8 @@ wasm-pack build --target web --out-dir pkg
 cd ts-wrapper
 npm install
 npm run build
-npm run demo          # runs dist/demo.js
-npm run demo-dev      # runs src/demo.ts via ts-node
+npm run demo       # Runs compiled dist/demo.js with real WASM
+npm run demo-dev   # Runs src/demo.ts with a mocked SDK
 ```
 
 > `demo.ts` dynamically switches between `src/` and `dist/` depending on the `USE_SRC` environment variable.
@@ -80,20 +80,34 @@ This package is published to `npm` under a forked repository: https://github.com
 
 ```tsx
 import {
-  is_valid_zcash_address,
-  get_raw_zcash_address,
-  parse_zcash_address,
-  get_zcash_address_type,
-  get_ua_receivers
+  initWasm,
+  isZcashAddressValid,
+  getZcashAddressType,
+  normalizeZcashAddress,
+  getAddressReceivers,
 } from "@elemental-zcash/zaddr_wasm_parser";
+
+await initWasm();
 
 const addr = "u1...";
 
-console.log("Valid:", is_valid_zcash_address(addr));
-console.log("Type:", get_zcash_address_type(addr));
-console.log("Raw:", get_raw_zcash_address(addr));
-console.log("Receivers:", get_ua_receivers(addr));
+console.log("Valid:", isZcashAddressValid(addr));
+console.log("Type:", getZcashAddressType(addr));
+console.log("Normalized:", normalizeZcashAddress(addr));
+console.log("Receivers:", getAddressReceivers(addr));
 ```
+
+Returned receiver structure:
+
+```type AddressReceivers = {
+  p2pkh: string | null;
+  p2sh: string | null;
+  sapling: string | null;
+  orchard: string | null;
+  tex: string | null;
+};
+```
+
 
 ## Usage Example
 
@@ -102,17 +116,18 @@ import {
   initWasm,
   isZcashAddressValid,
   getZcashAddressType,
-  getRawZcashAddress,
-  getUnifiedAddressReceivers,
+  normalizeZcashAddress,
+  getAddressReceivers,
 } from "zaddr-wasm-parser";
+
 
 await initWasm();
 
 const addr = "u1...";
 console.log("Valid:", isZcashAddressValid(addr));
 console.log("Type:", getZcashAddressType(addr));
-console.log("Raw:", getRawZcashAddress(addr));
-console.log("Receivers:", getUnifiedAddressReceivers(addr));
+console.log("Normalized:", normalizeZcashAddress(addr));
+console.log("Receivers:", getAddressReceivers(addr));
 ```
 
 ---
@@ -125,27 +140,39 @@ Initializes the WebAssembly module. Must be called before using other functions.
 ### `isZcashAddressValid(address: string): boolean`
 Returns `true` if the given string is a valid Zcash address.
 
-### `getZcashAddressType(address: string): "t" | "z" | "u" | "tex" | "unknown"`
+### `getZcashAddressType(address: string): "p2pkh" | "p2sh" | "sapling" | "unified" | "tex"`
 Returns the address type:
-- `"t"` — Transparent address
-- `"z"` — Sapling shielded address
-- `"u"` — Unified address
+- `"p2pkh"` — Transparent Pay-to-PubKey-Hash address
+- `"p2sh"` — Transparent Pay-to-Script-Hash address
+- `"sapling"` — Sapling shielded address
+- `"unified"` — Unified address
 - `"tex"` — TExt address (experimental)
-- `"unknown"` — Invalid address
 
-### `getRawZcashAddress(address: string): string | null`
-Returns a normalized version of the address string, or `null` if the input is invalid.
+### `normalizeZcashAddress(address: string): string`
+Returns a normalized version of the address string.
+Throws a `JsError` if the input is invalid.
 
-### `getUnifiedAddressReceivers(address: string): string[]`
-If a Unified Address is provided, this returns a list of its internal receivers as address strings.
+### `getAddressReceivers(address: string): AddressReceivers`
+Decomposes a Zcash address into its internal receivers.  
+Throws a `JsError` if the input is invalid.
+
+```ts
+type AddressReceivers = {
+  p2pkh: string | null;
+  p2sh: string | null;
+  sapling: string | null;
+  orchard: string | null;
+  tex: string | null;
+};
+```
 
 ---
 
 ## Fuzz Testing (Vitest)
 
-A simple fuzz test is included to ensure `getZcashAddressType()` handles unexpected input gracefully.
+A simple fuzz test is included to ensure the address parser handles edge cases gracefully.
 
-### Run with:
+Run with:
 
 ```bash
 npm run fuzz
@@ -163,7 +190,7 @@ npx tsx ts-wrapper/fuzz.test.ts
 
 ---
 
-## Testing
+## Rust Testing 
 
 To run integration tests using Chrome:
 
@@ -183,10 +210,39 @@ wasm-pack build --target web --out-dir pkg
 Expected output:
 
 ```
-test result: ok. 14 passed; 0 failed
+test result: ok. 16 passed; 0 failed
 ```
 
 ---
+
+### Node.js Integration Tests
+
+A plain JavaScript test file is included for manual validation via Node.js:
+
+```bash
+npx tsx test-integration/test.js
+```
+
+This script verifies multiple Zcash address types, including:
+
+- `t1` — Transparent P2PKH  
+- `zs` — Sapling  
+- `u1` — Unified Address  
+- `tex1` — TEX address (wrapped P2PKH with a different prefix)
+
+It also covers malformed inputs (e.g. empty strings, emojis, and garbage).
+
+Each test case prints results from the following methods:
+
+- `is_valid_zcash_address`
+- `get_zcash_address_type`
+- `normalize_zcash_address`
+- `get_address_receivers`
+
+This is a quick way to confirm that the WASM module functions correctly in Node.js environments.
+
+---
+
 
 ## Browser Demo
 
@@ -258,5 +314,8 @@ Dual-licensed under MIT or Apache-2.0.
 
 ## Maintainer
 
-- [@ruzcash](https://github.com/ruzcash)  
 - [@elemental-zcash](https://github.com/elemental-zcash)
+- [@nuttycom](https://github.com/nuttycom)
+- [@ruzcash](https://github.com/ruzcash)  
+
+

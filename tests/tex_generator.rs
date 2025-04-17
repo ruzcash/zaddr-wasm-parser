@@ -1,7 +1,6 @@
-use zcash_address::{ZcashAddress, ToAddress};
-use zcash_protocol::consensus::NetworkType;
 use web_sys::console;
-
+use zcash_address::{ToAddress, ZcashAddress};
+use zcash_protocol::consensus::NetworkType;
 
 pub fn generate_tex_address() -> String {
     let tex_data: [u8; 20] = [0u8; 20]; // some bytes
