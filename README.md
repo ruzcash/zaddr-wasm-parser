@@ -152,16 +152,18 @@ Returns a normalized version of the address string.
 Throws a `JsError` if the input is invalid.
 
 ### `getAddressReceivers(address: string): AddressReceivers`
-Decomposes a Zcash address into its internal receivers.
+Decomposes a Zcash address into its internal receivers.  
 Throws a `JsError` if the input is invalid.
 
-```type AddressReceivers = {
-  p2pkh: string | null,
-  p2sh: string | null,
-  sapling: string | null,
-  orchard: string | null
-}```
-
+```ts
+type AddressReceivers = {
+  p2pkh: string | null;
+  p2sh: string | null;
+  sapling: string | null;
+  orchard: string | null;
+  tex: string | null;
+};
+```
 
 ---
 
