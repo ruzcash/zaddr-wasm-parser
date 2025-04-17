@@ -79,12 +79,11 @@
     #clear:active {
       transform: scale(0.95);
     }
-    pre {
+    #output {
       background: #161b22;
       border: 1px solid #30363d;
       border-radius: 6px;
       padding: 1rem;
-      overflow-x: auto;
       white-space: pre-wrap;
       word-break: break-word;
     }
@@ -133,17 +132,16 @@
         <button id="clear" title="Clear input">🧹</button>
       </div>
 
-      <pre id="output">Waiting for input...</pre>
+      <div id="output" class="">Waiting for input...</div>
     </div>
   </div>
 
   <script type="module">
     import init, {
       is_valid_zcash_address,
-      get_raw_zcash_address_js,
-      parse_zcash_address_js,
+      normalize_zcash_address,
       get_zcash_address_type,
-      get_ua_receivers
+      get_address_receivers
     } from './pkg/zaddr_wasm_parser.js';
 
     function escapeHTML(str) {
@@ -196,51 +194,66 @@
           return;
         }
 
-        const isValid = is_valid_zcash_address(addr);
-        const raw = get_raw_zcash_address_js(addr);
-        const ptr = parse_zcash_address_js(addr);
-        const typ = get_zcash_address_type(addr);
+        try {
+          const isValid = is_valid_zcash_address(addr);
+          const norm = normalize_zcash_address(addr);
+          const typ = get_zcash_address_type(addr);
 
-        const label = {
-          t: "🔍 Transparent",
-          z: "🛡️ Sapling",
-          u: "🌐 Unified",
-          tex: "📈 TEX"  
-        }[typ] || "❓ Unknown type";
+          const label = {
+            p2pkh: "🔍 Transparent (P2PKH)",
+            p2sh: "🔍 Transparent (P2SH)",
+            sapling: "🛡️ Sapling",
+            unified: "🌐 Unified",
+            tex: "📈 TEX"
+          }[typ] || "❓ Unknown type";
 
-        let result = '';
-        if (isValid) {
-          result += `✅ Address is valid\n\n`;
-          result += `🔗 Normalized: ${escapeHTML(raw)}\n`;
-          result += `🏷️ Address type: ${label}\n`;
+          let result = '';
 
-          if (typ === "u") {
-            result += `📦 Parsing successful\n`;
+          if (isValid) {
+            result += `✅ Address is valid\n\n`;
+            result += `🔗 Normalized: ${escapeHTML(norm)}\n`;
+            result += `🏷️ Address type: ${label}\n`;
 
-            const receivers = get_ua_receivers(addr);
-            if (Array.isArray(receivers) && receivers.length > 0) {
-              result += `\nThis unified address contains:\n`;
+            if (typ === "unified") {
+              const receivers = get_address_receivers(addr);
+              result += `📦 UA Receivers:\n\n`;
 
-              receivers.forEach((r, i) => {
-                const safeR = escapeHTML(r);
-                const label = ['Orchard Address: ', 'Sapling Address: ', 'Transparent Address: '][i] || '';
-                result += `<div class="address-header">${label}</div><div class="address">${safeR}</div>\n`;
-                result += `<button class="copy-btn" onclick="copyToClipboard('${safeR}', this)">Copy</button>\n`;
-              });
+              if (receivers && typeof receivers === 'object') {
+                for (const [key, value] of Object.entries(receivers)) {
+                  if (value) {
+                    const labelMap = {
+                        orchard: "🍃 Orchard Address:",
+                        sapling: "🛡️ Sapling Address:",
+                        p2pkh: "🔍 Transparent (P2PKH):",
+                        p2sh: "🔍 Transparent (P2SH):",
+                    };
+                    
+                    const label = labelMap[typ] || "❓ Unknown type";
+                    
+                    const title = labelMap[key] || `${key}:`;
+                    const safeValue = escapeHTML(value);
+
+                    result += `<div class="address-header">${title}</div>`;
+                    result += `<div class="address">${safeValue}</div>`;
+                    result += `<button class="copy-btn" onclick="copyToClipboard('${safeValue}', this)">Copy</button>\n`;
+                  }
+                }
+              } else {
+                result += `⚠️ Could not parse receivers.\n`;
+              }
             }
+
+            output.className = 'valid';
+          } else {
+            result = '❌ Address is invalid';
+            output.className = 'invalid';
           }
 
-          output.className = 'valid';
-        } else {
-          result += `❌ Address is invalid\n`;
+          output.innerHTML = result;
+        } catch (e) {
+          output.textContent = '💥 Error: ' + (e.message || e);
           output.className = 'invalid';
         }
-
-        if (ptr === 0 && typ === "u") {
-          result += `⚠️ Parsing failed (unsupported format or error)\n`;
-        }
-
-        output.innerHTML = result;
       });
     }
 
