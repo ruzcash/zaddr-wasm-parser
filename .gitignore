@@ -12,6 +12,7 @@ ts-wrapper/node_modules/
 
 # TypeScript build artifacts
 ts-wrapper/dist/
+ts-wrapper/pkg/
 ts-wrapper/.tsbuildinfo
 
 # Test runner caches & logs
