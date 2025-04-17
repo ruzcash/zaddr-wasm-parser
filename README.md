@@ -171,7 +171,7 @@ type AddressReceivers = {
 
 A simple fuzz test is included to ensure the address parser handles edge cases gracefully.
 
-### Run with:
+Run with:
 
 ```bash
 npm run fuzz
@@ -189,7 +189,7 @@ npx tsx ts-wrapper/fuzz.test.ts
 
 ---
 
-## Testing
+## Rust Testing 
 
 To run integration tests using Chrome:
 
@@ -213,6 +213,35 @@ test result: ok. 16 passed; 0 failed
 ```
 
 ---
+
+### Node.js Integration Tests
+
+A plain JavaScript test file is included for manual validation via Node.js:
+
+```bash
+npx tsx test-integration/test.js
+```
+
+This script verifies multiple Zcash address types, including:
+
+- `t1` — Transparent P2PKH  
+- `zs` — Sapling  
+- `u1` — Unified Address  
+- `tex1` — TEX address (wrapped P2PKH with a different prefix)
+
+It also covers malformed inputs (e.g. empty strings, emojis, and garbage).
+
+Each test case prints results from the following methods:
+
+- `is_valid_zcash_address`
+- `get_zcash_address_type`
+- `normalize_zcash_address`
+- `get_address_receivers`
+
+This is a quick way to confirm that the WASM module functions correctly in Node.js environments.
+
+---
+
 
 ## Browser Demo
 

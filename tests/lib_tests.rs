@@ -59,8 +59,10 @@ fn test_unified_type() {
 #[wasm_bindgen_test]
 fn test_tex_address_type() {
     let address = tex_generator::generate_tex_address();
+    web_sys::console::log_1(&format!("TEX address: {}", address).into());
     assert_eq!(get_zcash_address_type(&address), Ok("tex".to_string()));
 }
+
 
 // === Invalid Addresses ===
 
