@@ -1,12 +1,18 @@
 import path from "path";
 import { fileURLToPath, pathToFileURL } from "url";
 
+type AddressReceivers = {
+    p2pkh: string | null,
+    p2sh: string | null,
+    sapling: string | null,
+    orchard: string | null
+};
+
 let wasm: {
   is_valid_zcash_address: (addr: string) => boolean;
   get_zcash_address_type: (addr: string) => string;
-  parse_zcash_address_js: (addr: string) => boolean;
-  get_raw_zcash_address_js: (addr: string) => string;
-  get_ua_receivers: (addr: string) => string[];
+  normalize_zcash_address: (addr: string) => string;
+  get_address_receivers: (addr: string) => AddressReceivers;
 };
 
 export async function initWasm(): Promise<void> {
@@ -27,16 +33,10 @@ export function getZcashAddressType(address: string): string {
   return wasm.get_zcash_address_type(address);
 }
 
-export function parseZcashAddress(address: string): boolean {
-  return wasm.parse_zcash_address_js(address);
+export function normalizeZcashAddress(address: string): string {
+  return wasm.normalize_zcash_address(address);
 }
 
-export function getRawZcashAddress(address: string): string | null {
-  const result = wasm.get_raw_zcash_address_js(address);
-  return result.startsWith("Error") ? null : result;
-}
-
-export function getUnifiedAddressReceivers(address: string): string[] {
-  const val = wasm.get_ua_receivers(address);
-  return val ? Array.from(val) : [];
+export function getAddressReceivers(address: string): AddressReceivers {
+  return wasm.get_address_receivers(address);
 }
