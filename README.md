@@ -207,7 +207,7 @@ wasm-pack build --target web --out-dir pkg
 Expected output:
 
 ```
-test result: ok. 14 passed; 0 failed
+test result: ok. 16 passed; 0 failed
 ```
 
 ---
