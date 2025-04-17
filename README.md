@@ -105,7 +105,8 @@ Returned receiver structure:
   sapling: string | null;
   orchard: string | null;
   tex: string | null;
-};```
+};
+```
 
 
 ## Usage Example
