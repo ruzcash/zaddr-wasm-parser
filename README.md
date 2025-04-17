@@ -66,8 +66,8 @@ wasm-pack build --target web --out-dir pkg
 cd ts-wrapper
 npm install
 npm run build
-npm run demo          # runs dist/demo.js
-npm run demo-dev      # runs src/demo.ts via ts-node
+npm run demo       # Runs compiled dist/demo.js with real WASM
+npm run demo-dev   # Runs src/demo.ts with a mocked SDK
 ```
 
 > `demo.ts` dynamically switches between `src/` and `dist/` depending on the `USE_SRC` environment variable.
