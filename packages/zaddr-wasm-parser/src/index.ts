@@ -20,7 +20,7 @@ export async function initWasm(): Promise<void> {
 
   const __filename = fileURLToPath(import.meta.url);
   const __dirname = path.dirname(__filename);
-  const wasmModulePath = path.resolve(__dirname, "../../pkg/zaddr_wasm_parser.js");
+  const wasmModulePath = path.resolve(__dirname, "./pkg/zaddr_wasm_parser.js");
 
   wasm = await import(pathToFileURL(wasmModulePath).href);
 }

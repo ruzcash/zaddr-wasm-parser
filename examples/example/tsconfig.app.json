@@ -23,7 +23,8 @@
     "noUncheckedSideEffectImports": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "@elemental-zcash/zaddr-wasm-parser": ["../../packages/zaddr-wasm-parser"]
     }
   },
   "include": ["src"]

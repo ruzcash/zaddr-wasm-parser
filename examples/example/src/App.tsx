@@ -6,7 +6,7 @@ import {
   parse_zcash_address,
   get_zcash_address_type,
   get_ua_receivers
-} from '@elemental-zcash/zaddr_wasm_parser';
+} from '@elemental-zcash/zaddr-wasm-parser';
 
 import './App.css'
 import { Input } from './components/ui/input';
