@@ -66,8 +66,8 @@ wasm-pack build --target web --out-dir pkg
 cd ts-wrapper
 npm install
 npm run build
-npm run demo       # Runs compiled dist/demo.js with real WASM
 npm run demo-dev   # Runs src/demo.ts with a mocked SDK
+npm run demo       # Runs compiled dist/demo.js with real WASM
 ```
 
 > `demo.ts` dynamically switches between `src/` and `dist/` depending on the `USE_SRC` environment variable.
@@ -170,22 +170,30 @@ type AddressReceivers = {
 
 ## Fuzz Testing (Vitest)
 
-A simple fuzz test is included to ensure the address parser handles edge cases gracefully.
+A comprehensive fuzz test is included to ensure the Zcash address parser handles edge cases correctly and safely.
 
-Run with:
+This uses [`vitest`](https://vitest.dev/) to validate the parser’s behavior across malformed, truncated, and fully valid addresses. It covers:
+
+- Address validation
+- Type detection
+- Normalization
+- Receiver extraction
+
+Supported address types include:
+- Transparent (`p2pkh`, `p2sh`)
+- Sapling
+- Unified Address (UA)
+- Orchard-only UA
+- TEX
+
+All tests are located in:  
+`ts-wrapper/fuzz.test.ts`
+
+Run it from the `ts-wrapper` directory:
 
 ```bash
+cd ts-wrapper
 npm run fuzz
-```
-
-This uses [`vitest`](https://vitest.dev/) to feed edge-case strings into the parser.  
-All tests are located in `ts-wrapper/fuzz.test.ts`.
-
-You can extend the test cases for additional coverage.
-
-> To run manually:
-```bash
-npx tsx ts-wrapper/fuzz.test.ts
 ```
 
 ---
