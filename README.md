@@ -4,6 +4,8 @@
 
 It provides a minimal and reliable API to validate, classify, and analyze Zcash addresses, including Unified Addresses (UA), without requiring access to private keys, wallet state, or blockchain nodes.
 
+Demo website: https://zcash.space/
+
 This module is built using the Rust library [`zcash_address`](https://docs.rs/zcash_address/latest/zcash_address).  
 Source code is located in the `src/` directory.  
 WASM-integrated tests are located in the `tests/` directory.
